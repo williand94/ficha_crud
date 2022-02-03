@@ -7,18 +7,34 @@ class MainModel
     /*--------- Function to connect to the DDBB --------- */
     public static function connect()
     {
-        $connect = new PDO(SGBD, USER, PASS);
-        $connect->exec("SET CHARACTER SET utf8");
+        //$connect = new PDO(SGBD, USER, PASS);
+        try {
+            $connect = new PDO(SGBD, USER, PASS, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
+            $connect->exec("SET CHARACTER SET utf8");
+        } catch (PDOException $e) {
+            echo 'Error de conexión: ' . $e->getMessage();
+            exit;
+        }
+
         return $connect;
     }
 
     /*--------- Function to execute a simple query --------- */
-    protected static function execute_simple_query($query)
+   /*  protected static function execute_simple_query($query,$arrayToExecute)
+    {
+        $sql = self::connect()->prepare($query);
+        $sql->execute($arrayToExecute);
+        return $sql;
+    } */
+
+    /*--------- Function to show select's information in the Template--------- */
+    protected static function query_select($query)
     {
         $sql = self::connect()->prepare($query);
         $sql->execute();
         return $sql;
     }
+
 
     /*--------- Function to clean String --------- */
     protected static function clean_string($string)

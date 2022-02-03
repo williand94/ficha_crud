@@ -1,5 +1,8 @@
 <?php
 require_once("config/APP.php");
+require_once("config/SERVE.php");
+require_once("controllers/playerController.php");
+
 
 if (!empty($_GET['views'])) {
 

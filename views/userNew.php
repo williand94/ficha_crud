@@ -1,6 +1,6 @@
 <h2>Registrar Nuevo jugador:</h2>
 
-<form method="POST">
+<form method="POST" class="form-control-file" enctype="multipart/form-data">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="names">Nombre</label>
@@ -11,15 +11,28 @@
             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Ingrese apellido del jugador">
         </div>
         <div class="form-group  col-md-4">
+            <label for="guardian">Acudiente</label>
+            <select class="form-control" name="guardian" id="guardian">
+                <option selected value="">Selecciona el acudiente</option>
+                 <?php $sql = PlayerController::show_guardian();
+                    foreach($sql as $guardian):?>
+                    <option value="<?php echo $guardian['id'];?>"><?php echo $guardian['names'];?></option>
+                <?php endforeach;?>
+            </select>
+        </div>
+        <div class="form-group  col-md-4">
             <label for="gender">Género</label>
             <select class="form-control" name="gender" id="gender">
-                <option>Masculino</option>
-                <option>Femenino</option>
+                <option selected>Selecciona el género</option>
+                <?php $sql = PlayerController::show_gender();
+                    foreach($sql as $gender):?>
+                    <option value="<?php echo $gender['id'];?>"><?php echo $gender['gender'];?></option>
+                <?php endforeach;?>
             </select>
         </div>
         <div class="form-group col-md-4">
-            <label for="email">Fecha de Nacimiento</label>
-            <input type="date" class="form-control" name="date_birth" id="date_b">
+            <label for="date_birth">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" name="date_birth" id="date_birth">
         </div>
         <div class="form-group col-md-4">
             <label for="age">edad</label>
@@ -28,11 +41,11 @@
         <div class="form-group  col-md-4">
             <label for="categories">Categoría</label>
             <select class="form-control" name="categories" id="categories">
-                <option>Benjamín</option>
-                <option>Alevín</option>
-                <option>Infantil</option>
-                <option>Cadete</option>
-                <option>Juvenil</option>
+                <option selected value="">Selecciona la categoría</option>
+                 <?php $sql = PlayerController::show_categories();
+                    foreach($sql as $category):?>
+                    <option value="<?php echo $category['id'];?>"><?php echo $category['category'];?></option>
+                <?php endforeach;?>
             </select>
         </div>
         <div class="form-group col-md-4">
@@ -73,7 +86,7 @@
         </div>
         <div class="form-group col-md-4">
             <label for="photo">Subir Foto</label>
-            <input type="file" class="form-control-file" name="photo" id="photo">
+            <input type="file" name="photo" id="photo">
         </div>
     </div>
     <button type="submit" name="send" class="btn btn-primary">Submit</button>
