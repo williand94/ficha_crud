@@ -17,10 +17,9 @@ class PlayerController extends PlayerModel
             empty($_POST['weight'])     || empty($_POST['size_shirt']) ||
             empty($_POST['size_shoes']) || empty($_POST['status'])     ||
             empty($_POST['date_add'])
-            
+
         ) {
             echo "Todos los campos son obligatorios";
-
         } else {
 
             $name =         MainModel::clean_string($_POST['names']);
@@ -49,33 +48,51 @@ class PlayerController extends PlayerModel
             $genders = PlayerController::show_gender();
             $g_ = [];
             foreach ($genders as $gender) {
-                $g_= $gender;
+                $g_ = $gender;
             }
             $categories_ = PlayerController::show_categories();
-            $c=[];
+            $c = [];
             foreach ($categories_ as $category) {
                 $c = $category;
             }
 
-            $get_image = PlayerModel::upload_image($_FILES['photo']);
+            $insert_img = PlayerModel::upload_image($_FILES['photo']);
+            //var_dump($_FILES['photo']);
+            //var_dump($insert_img);
 
-            PlayerModel::insert($g['id'], $c['id'], $name, $last_name, $date_birth, $tj_id, $age,
-            $adress, $cel, $g_['id'], $height, $weight, $date_add, $status, $size_shirt, $size_shoes,$get_image[0]);
+            if (isset($insert_img)) {
 
-            //print_r($_FILES['photo']);
-            if($_FILES['photo']['tmp_name'])
-            {
-                if(is_dir($get_image[3]))
-                {
-                    move_uploaded_file($get_image[2],"$get_image[1]");
+                $sql = PlayerModel::insert(
+                    $g['id'],
+                    $c['id'],
+                    $name,
+                    $last_name,
+                    $date_birth,
+                    $tj_id,
+                    $age,
+                    $adress,
+                    $cel,
+                    $g_['id'],
+                    $height,
+                    $weight,
+                    $date_add,
+                    $status,
+                    $size_shirt,
+                    $size_shoes,
+                    $insert_img[1]
+                );
+
+                if (!$sql) {
+
+                    echo "entré 2";
+                    move_uploaded_file($insert_img[2], $insert_img[0]);
+                } else {
+
+                    echo "Error al subir Fichero";
                 }
-                    
             }
-            
         }
 
         include("views/userNew.php");
     }
-
-    
 }

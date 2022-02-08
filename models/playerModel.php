@@ -17,9 +17,7 @@ class PlayerModel extends MainModel
         $sql = MainModel::connect();
         $sql->prepare($query)->execute(array(
             $guardian, $categories, $name, $last_name, $date_birth, $tj_id, $age,
-            $adress, $cel, $gender, $height, $weight, $date_add, $status, $size_shirt, $size_shoes,
-            $picture
-
+            $adress, $cel, $gender, $height, $weight, $date_add, $status, $size_shirt, $size_shoes,$picture
         ));
     }
 
@@ -56,27 +54,37 @@ class PlayerModel extends MainModel
 
     public static function upload_image($file)
     {
-
-            $n_photo = $file['name'];
+        
+        if($file['name'])
+        {
+            $array_error = [];
+            $name = $file['name'];
+            $tmp_name = $file['tmp_name'];
             $type = $file['type'];
-            $imgProducto = 'img_producto.jpg';
+            $size = $file['size'];
+            $extensions = ['jpg','jpeg','png'];
+            $file_ext = strtolower(end(explode('.',$name)));
+            $data = [];
+            $root = getcwd();
 
-            if (isset($n_photo) && $n_photo != "" || strpos($type, "jpg") || strpos($type, "jpeg")) {
-
-                $size = $file['size'];
-                $url_mp = $file['tmp_name'];
-
-                $info = [];
-
-                $destino      = 'assets/img/uploads/';
-              /*   $name_img     = 'img_'.md5(date('d-m-Y H:m:s'));
-                $user_img     = $name_img.'.jpg';
-                */
-                $src          = $destino.$n_photo; 
-                array_push($info, $n_photo, $src, $url_mp,$destino);
-                return $info;
+            if(in_array($file_ext,$extensions)=== false)
+            {
+                $array_error = "Extensión no permitida. Debe adjuntar una foto de extension 'jpg,jpeg,png'";
+                print_r( $array_error);
             }
 
-        return $imgProducto  ;
+            if($name != "")
+            {
+                $path = "assets/img/uploads/";
+                $name_img   = 'img_'.md5(date('d-m-Y H:m:s'));
+                $player_img = $name_img.".".$file_ext;
+                $src = $root."/".$path.$player_img;
+                array_push($data, $src, $player_img,$tmp_name);
+                return $data;
+            }
+
+            
+        }
+            
     }
 }
